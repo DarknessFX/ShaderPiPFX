@@ -57,12 +57,12 @@ DirectX Compiler - https://github.com/microsoft/DirectXShaderCompiler<br/>
 WindowStyle (adapted from) - https://github.com/melak47/BorderlessWindow + https://stackoverflow.com/a/39735058<br/>
 
 ## Sugestions
-IDE Extension
+IDE Extension<br/>
 HLSL Tools for Visual Studio - https://marketplace.visualstudio.com/items?itemName=TimGJones.HLSLToolsforVisualStudio<br/>
 HLSL Tools for VS Code - https://marketplace.visualstudio.com/items?itemName=TimGJones.hlsltools<br/>
 HLSL preview - https://marketplace.visualstudio.com/items?itemName=A2K.hlsl-preview<br/>
 
-Shader Tools
+Shader Tools<br/>
 Bonzomatic - https://github.com/Gargaj/Bonzomatic<br/>
 ShaderToy - https://www.shadertoy.com/<br/>
 SHADERed - https://shadered.org/<br/>
