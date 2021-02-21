@@ -70,5 +70,5 @@ ShaderPlayground - http://shader-playground.timjones.io/<br/>
 
 ## License
 
-MIT License<br/><br/>
+MIT License - 2021<br/><br/>
 DarknessFX @ <a href="https://dfx.lv" target="_blank">https://dfx.lv</a> | Twitter: <a href="https://twitter.com/DrkFX" target="_blank">@DrkFX</a> <br/>https://github.com/DarknessFX/ShaderPiPFX
