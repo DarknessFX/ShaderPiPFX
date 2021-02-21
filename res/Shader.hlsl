@@ -68,8 +68,8 @@ float2 uv_glsl(float2 pos)
 float4 PSMain(PSInput input) : SV_TARGET
 {
     float2 uv = input.position.xy / resolution.xy;  // UV as 0 to 1
-    float2 uvgl = uv_glsl(input.position);          // GLSL UV
-    float2 pos = input.position.xy                  // fragCoord
+    float2 uvgl = uv_glsl(input.position.xy);       // GLSL UV
+    float2 pos = input.position.xy;                 // fragCoord
     float4 color;                                   // fragColor
     
     {
