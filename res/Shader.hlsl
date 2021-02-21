@@ -29,7 +29,6 @@ struct VSInput
 struct PSInput
 {
     float4 position : SV_POSITION;
-    float2 pos : VPOS;              // Position as XY
     float4 color : COLOR;
     float2 texuv0 : TEXCOORD0;
     float2 texuv1 : TEXCOORD1;
@@ -44,7 +43,6 @@ PSInput VSMain(VSInput input)
     PSInput result;
 
     result.position = float4(input.position, 1);
-    result.pos = input.position.xy;
     result.color = input.color;
     result.texuv0 = input.texuv0;
     result.texuv1 = input.texuv1;
@@ -59,10 +57,19 @@ PSInput VSMain(VSInput input)
 
 // ============================================================================
 
+float2 uv_glsl(float2 pos) 
+{
+  float2 uv;
+  uv.x = pos.x / resolution.x;
+  uv.y = 1 - ( pos.y / resolution.y );
+  return uv;
+}
+
 float4 PSMain(PSInput input) : SV_TARGET
 {
     float2 uv = input.position.xy / resolution.xy;  // UV as 0 to 1
-    float2 pos = input.pos;                         // fragCoord
+    float2 uvgl = uv_glsl(input.position);          // GLSL UV
+    float2 pos = input.position.xy                  // fragCoord
     float4 color;                                   // fragColor
     
     {
