@@ -27,7 +27,7 @@ FXApp::FXApp(UINT width, UINT height, std::wstring name) :
 	GetAssetsPath(assetsPath, _countof(assetsPath));
 	m_assetsPath = assetsPath;
 
-	m_aspectRatio = width / height;
+	m_aspectRatio = float(width) / float(height);
 
 	m_timer.SetFixedTimeStep(true);
 	m_timer.SetTargetElapsedSeconds(1.f / 60.f);
@@ -1232,7 +1232,7 @@ void FXApp::OnWindowSizeChanged(int width, int height)
 	bIsNextFrameReady = false;
 	m_width = width;
 	m_height = height;
-	m_aspectRatio = width / height;
+	m_aspectRatio = float(width) / float(height);
 	WaitForNextFrame();
 	ImGui_ImplDX12_InvalidateDeviceObjects();
 	ResizeSwapChain(width, height);

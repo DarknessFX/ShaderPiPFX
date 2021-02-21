@@ -37,8 +37,8 @@ public:
 	void SetShaderFile(std::wstring fileName);
 	UINT GetWidth() const           { return m_width; }
     UINT GetHeight() const          { return m_height; }
-    void SetWidth(int& width)       { m_width = width; 	 m_aspectRatio = width / m_height; }
-    void SetHeight(int& height)     { m_height = height; m_aspectRatio = m_width / height; }
+    void SetWidth(int& width)       { m_width = width; 	 m_aspectRatio = float(width) / float(m_height); }
+    void SetHeight(int& height)     { m_height = height; m_aspectRatio = float(m_width) / float(height) ;}
     void SetDPI(int& dpi)			{ m_dpi = dpi; }
     const WCHAR* GetTitle() const   { return m_title.c_str(); }
 
