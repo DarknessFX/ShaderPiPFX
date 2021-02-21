@@ -32,6 +32,7 @@ Project info/blog at https://dfx.lv/ShaderPiPFX (soon) .<br/><br/>
 # Usage
 
 - Left Click and drag window to move.
+- Left DoubleClick to toogle fullscreen.
 - Right Click to toogle window always on top.
 - Shift+ESC to exit.
 
