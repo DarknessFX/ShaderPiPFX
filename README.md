@@ -52,21 +52,21 @@ v0.1 - Alpha released.
 - (soon).
 
 ## Credits
-DearImGui - https://github.com/ocornut/imgui
-DirectX Compiler - https://github.com/microsoft/DirectXShaderCompiler
-WindowStyle (adapted from) - https://github.com/melak47/BorderlessWindow + https://stackoverflow.com/a/39735058
+DearImGui - https://github.com/ocornut/imgui<br/>
+DirectX Compiler - https://github.com/microsoft/DirectXShaderCompiler<br/>
+WindowStyle (adapted from) - https://github.com/melak47/BorderlessWindow + https://stackoverflow.com/a/39735058<br/>
 
 ## Sugestions
 IDE Extension
-HLSL Tools for Visual Studio - https://marketplace.visualstudio.com/items?itemName=TimGJones.HLSLToolsforVisualStudio
-HLSL Tools for VS Code - https://marketplace.visualstudio.com/items?itemName=TimGJones.hlsltools
-HLSL preview - https://marketplace.visualstudio.com/items?itemName=A2K.hlsl-preview
+HLSL Tools for Visual Studio - https://marketplace.visualstudio.com/items?itemName=TimGJones.HLSLToolsforVisualStudio<br/>
+HLSL Tools for VS Code - https://marketplace.visualstudio.com/items?itemName=TimGJones.hlsltools<br/>
+HLSL preview - https://marketplace.visualstudio.com/items?itemName=A2K.hlsl-preview<br/>
 
 Shader Tools
-Bonzomatic - https://github.com/Gargaj/Bonzomatic
-ShaderToy - https://www.shadertoy.com/
-SHADERed - https://shadered.org/
-ShaderPlayground - http://shader-playground.timjones.io/
+Bonzomatic - https://github.com/Gargaj/Bonzomatic<br/>
+ShaderToy - https://www.shadertoy.com/<br/>
+SHADERed - https://shadered.org/<br/>
+ShaderPlayground - http://shader-playground.timjones.io/<br/>
 
 ## License
 
