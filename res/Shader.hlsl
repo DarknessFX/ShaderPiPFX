@@ -62,7 +62,7 @@ PSInput VSMain(VSInput input)
 float4 PSMain(PSInput input) : SV_TARGET
 {
     float2 uv = input.position.xy / resolution.xy;  // UV as 0 to 1
-    float2 pos = input.pos;                         // fragCood
+    float2 pos = input.pos;                         // fragCoord
     float4 color;                                   // fragColor
     
     {
