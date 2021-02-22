@@ -13,6 +13,10 @@ extern "C"
 	__declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
 }
 
+BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam);
+bool bIsSendingFile = false;
+LPWSTR lpSendCmdLine;
+
 const DWORD dwStyle = WS_POPUP | WS_SYSMENU | WS_THICKFRAME | WS_DLGFRAME | WS_MAXIMIZEBOX | WS_MINIMIZEBOX;
 
 FXApp* fxApp = nullptr;
@@ -25,17 +29,17 @@ int m_currentDPI = 96;  // Windows default DPI
 
 int Wnd::Run(FXApp* pfxApp, HINSTANCE hInstance, LPWSTR lpCmdLine, int nCmdShow)
 {
-	// FX
-	if (!Wnd::FXInit(lpCmdLine))	{ return false;	}
-	if (!Wnd::VerifyCPU()) { return true; }
-	if (!Wnd::FXCreateWindow(pfxApp, hInstance, nCmdShow)) { return true; }
-	bImGuiLoaded = true;
-
 	// Parse the command line parameters
 	int argc;
 	LPWSTR* argv = CommandLineToArgvW(GetCommandLineW(), &argc);
 	pfxApp->ParseCommandLineArgs(argv, argc);
 	LocalFree(argv);
+	
+	// FX
+	if (!Wnd::FXInit(lpCmdLine))	{ return false;	}
+	if (!Wnd::VerifyCPU()) { return true; }
+	if (!Wnd::FXCreateWindow(pfxApp, hInstance, nCmdShow)) { return true; }
+	bImGuiLoaded = true;
 
     MSG msg = {};
 	ZeroMemory(&msg, sizeof(msg));
@@ -76,18 +80,19 @@ bool Wnd::FXInit(LPWSTR lpCmdLine)
 	}
 	else
 	{
-		HWND hWnd = FindWindow(0, L"ShaderPiPFX");
-		SetForegroundWindow(hWnd);
-		if (wcslen(lpCmdLine) != 0) {
-			COPYDATASTRUCT cds;
-			cds.cbData = wcslen(lpCmdLine) * 2;
-			cds.lpData = lpCmdLine;
-			SendMessage(hWnd, WM_COPYDATA, 0, (LPARAM)&cds);
+		// HLSL file droped on .EXE while another ShaderPiPFX is running
+		// send the new file name to that other instance and exit. 
+		bIsSendingFile = true;
+		lpSendCmdLine = lpCmdLine;
+		EnumWindows(EnumWindowsProc, NULL);
+		while (bIsSendingFile)
+		{
 		}
 		return false;
 	}
 	return true;
 }
+
 bool Wnd::FXCreateWindow(FXApp* pfxApp, HINSTANCE hInstance, int nCmdShow)
 {
 	fxApp = pfxApp;
@@ -528,9 +533,12 @@ LRESULT CALLBACK Wnd::WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 			if (pcds->dwData != 0)
 			{
 				const LPWSTR lpCmdLine = (LPWSTR)(pcds->lpData);
+				fxApp->SetShaderFile(lpCmdLine);
 				OutputDebugString(lpCmdLine);
+				OutputDebugString(L"\n");
+				return true;
 			}
-			break;
+			return false;
 		}
 
 		case WM_ACTIVATE:
@@ -651,3 +659,23 @@ void Wnd::OnFileLoad(std::wstring inFileName)
 	FileWatcherStart(inFileName);
 }
 
+BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam)
+{
+	static TCHAR buffer[50];
+
+	GetWindowText(hwnd, buffer, 50);
+	std::wstring wndText = buffer;
+	if (wndText.find(L"ShaderPiPFX") != std::wstring::npos) 
+	{
+		SetForegroundWindow(hwnd);
+		if (wcslen(lpSendCmdLine) != 0) {
+			COPYDATASTRUCT cds;
+			cds.cbData = wcslen(lpSendCmdLine) * 2;
+			cds.lpData = lpSendCmdLine;
+			SendMessage(hwnd, WM_COPYDATA, 0, (LPARAM)&cds);
+			bIsSendingFile = false;
+			return false;
+		}
+	}
+	return true;
+}

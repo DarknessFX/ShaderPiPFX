@@ -1351,6 +1351,11 @@ void FXApp::ParseCommandLineArgs(WCHAR* argv[], int argc)
 			m_useWarpDevice = true;
 			m_title = m_title + L" (WARP)";
 		}
+
+		std::wstring arg = argv[i];
+		if (arg.find(L".hlsl") != std::wstring::npos) {
+			SetShaderFile(arg, true);
+		}
 	}
 }
 
@@ -1411,7 +1416,7 @@ void FXApp::OpenFileDialog()
 	}
 }
 
-void FXApp::SetShaderFile(std::wstring fileName)
+void FXApp::SetShaderFile(std::wstring fileName, bool bSkipReload)
 {
 	m_shaderFile = fileName;
 
@@ -1419,7 +1424,10 @@ void FXApp::SetShaderFile(std::wstring fileName)
 	m_shaderFileA = converted_str.c_str();
 
 	bIsShaderFile = true;
-	ReloadAssets();
+	if (!bSkipReload) 
+	{
+		ReloadAssets();
+	}
 	Wnd::OnFileLoad(m_shaderFile);
 }
 

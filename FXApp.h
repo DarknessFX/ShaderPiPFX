@@ -35,7 +35,7 @@ public:
 
 	virtual bool UIWantCapture();
 
-	void SetShaderFile(std::wstring fileName);
+	void SetShaderFile(std::wstring fileName, bool bSkipReload = false);
 	UINT GetWidth() const           { return m_width; }
     UINT GetHeight() const          { return m_height; }
     void SetWidth(int& width)       { m_width = width; 	 m_aspectRatio = float(width) / float(m_height); }
