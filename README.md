@@ -49,7 +49,7 @@ You can drag-drop any HLSL file from Windows Explorer to ShaderPiPFX Window to c
 You can drag-drop any HLSL file to ShaderPiPFX.exe (or shortcut) to start working directly with your selected file.<br />
 
 # Video Sample
-<a href="https://www.youtube.com/watch?v=AcovXaRJBqg" target="_blank"><img src="https://raw.githubusercontent.com/DarknessFX/ShaderPiPFX/main/.git_img/Sample02.png" width="640px" /></a><br/>
+<a href="https://www.youtube.com/watch?v=AcovXaRJBqg" target="_blank"><img src="https://raw.githubusercontent.com/DarknessFX/ShaderPiPFX/main/.git_img/Sample02.png" width="640px" /><br/>Youtube Link</a><br/>
 
 # Versioning
 v0.2 - Fixed AspectRatio on start. Fixed resolution.w (AspectRatio) HLSL initial value. Included UV Style Helpers on Shaders.hlsl template.
