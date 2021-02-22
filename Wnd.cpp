@@ -141,10 +141,10 @@ bool Wnd::FXCreateWindow(FXApp* pfxApp, HINSTANCE hInstance, int nCmdShow)
 	m_currentDPI = iDpi;
 	SetWindowPos(hwnd, NULL, fullWidth - contentWidth - offset, fullHeight - contentHeight, contentWidth, contentHeight, SWP_NOZORDER | SWP_NOACTIVATE);
 
-	fxApp->OnInit();
 	fxApp->SetDPI(m_currentDPI);
 	fxApp->SetWidth(contentWidth);
 	fxApp->SetHeight(contentHeight);
+	fxApp->OnInit();
 
 	ShowWindow(hwnd, nCmdShow);
 	UpdateWindow(hwnd);

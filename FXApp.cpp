@@ -315,6 +315,12 @@ void FXApp::LoadPipeline()
 		m_swapChainWaitableObject = m_swapChain->GetFrameLatencyWaitableObject();
 		m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
 	}
+
+	// Update Viewport and Scissors sizes
+	m_viewport.Width = m_width;
+	m_viewport.Height = m_height;
+	m_scissorRect.right = m_width;
+	m_scissorRect.bottom = m_height;
 }
 
 void FXApp::LoadAssets()
