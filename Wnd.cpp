@@ -532,9 +532,13 @@ LRESULT CALLBACK Wnd::WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 			COPYDATASTRUCT* pcds = (COPYDATASTRUCT*)lParam;
 			if (pcds->dwData != 0)
 			{
-				const LPWSTR lpCmdLine = (LPWSTR)(pcds->lpData);
+				std::wstring lpCmdLine = (LPWSTR)(pcds->lpData);
+				if (lpCmdLine.substr(0,1) == L"\"")
+				{
+					lpCmdLine = lpCmdLine.substr(1, lpCmdLine.length() - 2);
+				}
 				fxApp->SetShaderFile(lpCmdLine);
-				OutputDebugString(lpCmdLine);
+				OutputDebugString(lpCmdLine.c_str());
 				OutputDebugString(L"\n");
 				return true;
 			}
@@ -669,9 +673,10 @@ BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam)
 	{
 		SetForegroundWindow(hwnd);
 		if (wcslen(lpSendCmdLine) != 0) {
+			std::wstring wstrFilename = lpSendCmdLine;
 			COPYDATASTRUCT cds;
-			cds.cbData = wcslen(lpSendCmdLine) * 2;
-			cds.lpData = lpSendCmdLine;
+			cds.cbData = (wstrFilename.length() + 1) * sizeof(WCHAR);
+			cds.lpData = (LPVOID)wstrFilename.c_str();
 			SendMessage(hwnd, WM_COPYDATA, 0, (LPARAM)&cds);
 			bIsSendingFile = false;
 			return false;
