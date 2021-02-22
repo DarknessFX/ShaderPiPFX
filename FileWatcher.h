@@ -22,7 +22,7 @@ fs::file_time_type m_fwfileLastWrite;
 void FileWatcherStart();
 void FileWatcherStop();
 void FWGetFileLastWrite();
-void FWCheckFileUpdated();
+bool FWCheckFileUpdated();
 void FWWaitForFileChanges();
 
 template <typename TP>
@@ -41,8 +41,15 @@ void CALLBACK WaitOrTimerCallback(
 	static bool bIsNotifying;
 	if (!bIsNotifying) {
 		bIsNotifying = true;
-		FWCheckFileUpdated();
-		FindNextChangeNotification(hFileChangeNotify);
+		if (FWCheckFileUpdated()) 
+		{
+			FindNextChangeNotification(hFileChangeNotify);
+		}
+		else
+		{
+			//File deleted, stop watcher
+			FileWatcherStop();
+		}
 		bIsNotifying = false;
 	}
 }
@@ -71,13 +78,18 @@ void FWGetFileLastWrite()
 	m_fwfileLastWrite = fs::last_write_time(m_fwfileName);
 }
 
-void FWCheckFileUpdated()
+bool FWCheckFileUpdated()
 {
-	if (m_fwfileLastWrite != fs::last_write_time(m_fwfileName))
+	if (fs::exists(m_fwfileName)) 
 	{
-		m_fwfileLastWrite = fs::last_write_time(m_fwfileName);
-		bIsFileChanged = true;
+		if (m_fwfileLastWrite != fs::last_write_time(m_fwfileName))
+		{
+			m_fwfileLastWrite = fs::last_write_time(m_fwfileName);
+			bIsFileChanged = true;
+		}
+		return true;
 	}
+	return false;
 }
 
 void FWWaitForFileChanges()
