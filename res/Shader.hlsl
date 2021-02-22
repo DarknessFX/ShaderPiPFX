@@ -65,12 +65,24 @@ float2 uv_glsl(float2 pos)
   return uv;
 }
 
+float2 uv_center(float2 pos)
+{
+    // UV Center with AspectRatio correction
+    float2 uv = pos.xy / resolution.xy - 0.5;
+    uv.x *= resolution.w;
+    return uv;
+}
+
 float4 PSMain(PSInput input) : SV_TARGET
 {
-    float2 uv = input.position.xy / resolution.xy;  // UV as 0 to 1
-    float2 uvgl = uv_glsl(input.position.xy);       // GLSL UV
-    float2 pos = input.position.xy;                 // fragCoord
-    float4 color;                                   // fragColor
+    //UV Types Helper
+    float2 uvhlsl = input.position.xy / resolution.xy;      // TopLeft     0,0     BottomRight    1,1
+    float2 uvglsl = uv_glsl(input.position.xy);             // BottomLeft  0,0     TopRigth       1,1
+    float2 uvcenter = uv_center(input.position.xy);         // TopLeft  -0.5,-0.5  BottomRight  0.5,0.5
+
+    float2 uv = uvcenter;
+    float2 pos = input.position.xy;                   // fragCoord
+    float4 color;                                     // fragColor
     
     {
         // Credits ShaderToy.com - New Shader
