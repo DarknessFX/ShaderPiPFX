@@ -53,6 +53,7 @@ You can drag-drop any HLSL file to ShaderPiPFX.exe (or shortcut) to start workin
 <a href="https://www.youtube.com/watch?v=AcovXaRJBqg" target="_blank"><img src="https://raw.githubusercontent.com/DarknessFX/ShaderPiPFX/main/.git_img/Sample02.png" width="640px" /><br/>Youtube Link</a><br/>
 
 # Versioning
+v0.4.6 - Fixed bug when files with spaces are loaded by droping hlsl file on .EXE .<br/>
 v0.4.5 - Fixed loading shader using .EXE command argument. Fixed changing loaded shader by droping hlsl file on .EXE .<br/>
 v0.4 - Included Mouse Coords and Button Clicks to Shader. SHIFT disable window mouse and send only to Shader.<br/>
 v0.3 - Fixed crash when loaded HLSL is deleted.<br/>
