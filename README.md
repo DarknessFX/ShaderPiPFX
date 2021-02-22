@@ -52,9 +52,9 @@ You can drag-drop any HLSL file to ShaderPiPFX.exe (or shortcut) to start workin
 <a href="https://www.youtube.com/watch?v=AcovXaRJBqg" target="_blank"><img src="https://raw.githubusercontent.com/DarknessFX/ShaderPiPFX/main/.git_img/Sample02.png" width="640px" /><br/>Youtube Link</a><br/>
 
 # Versioning
-v0.3 - Fixed crash when loaded HLSL is deleted.
-v0.2 - Fixed AspectRatio on start. Fixed resolution.w (AspectRatio) HLSL initial value. Included UV Style Helpers on Shaders.hlsl template.
-v0.1 - Alpha released.
+v0.3 - Fixed crash when loaded HLSL is deleted.<br/>
+v0.2 - Fixed AspectRatio on start. Fixed resolution.w (AspectRatio) HLSL initial value. Included UV Style Helpers on Shaders.hlsl template.<br/>
+v0.1 - Alpha released.<br/>
 
 ## TODO
 
