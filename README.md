@@ -29,6 +29,12 @@ Project info/blog at https://dfx.lv/ShaderPiPFX (soon) .<br/><br/>
 
 # Requirements
 
+To Build:
+- Visual Studio 2019 with "Game development with C++" workload installed.
+
+To Use:
+- Windows 10 (updated).
+
 # Usage
 
 - Left Click and drag window to move.
