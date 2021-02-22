@@ -104,6 +104,10 @@ void FXApp::OnUpdate()
 		m_cbvData.clock.y = m_tmLocalTime.tm_min;
 		m_cbvData.clock.z = m_tmLocalTime.tm_sec;
 		m_cbvData.clock.w = m_tmLocalTime.tm_isdst;
+		m_cbvData.mouse.x = m_mouse.x;
+		m_cbvData.mouse.y = m_mouse.y;
+		m_cbvData.mouse.z = m_mouse.lClick;
+		m_cbvData.mouse.w = m_mouse.rClick;
 		m_cbvData.random = rand() * RAND_MAX;
 		m_cbvData.perfHigh = m_timer.GetPerfTimeHigh();
 		m_cbvData.perfLow = m_timer.GetPerfTimeLow();
@@ -1231,6 +1235,14 @@ void FXApp::OnSuspending()
 
 void FXApp::OnWindowMoved()
 {
+}
+
+void FXApp::OnMouseEvent(int x, int y, int lClick, int rClick)
+{
+	m_mouse.x = x;
+	m_mouse.y = y;
+	m_mouse.lClick = lClick;
+	m_mouse.rClick = rClick;
 }
 
 void FXApp::OnWindowSizeChanged(int width, int height)

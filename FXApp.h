@@ -28,6 +28,7 @@ public:
 	virtual void OnWindowSizeChanged(int width, int height);
 	virtual void OnSuspending();
 	virtual void OnResuming();
+	virtual void OnMouseEvent(int x, int y, int lClick, int rClick);
 
     virtual void OnKeyDown(UINT8 /*key*/)   {}
     virtual void OnKeyUp(UINT8 /*key*/)     {}
@@ -70,6 +71,42 @@ private:
 		VertexShader
 	};
 
+	// Structs
+	struct Vertex
+	{
+		XMFLOAT3 position;
+		XMFLOAT4 color;
+		XMFLOAT2 texuv0;
+		XMFLOAT2 texuv1;
+		XMFLOAT3 normal;
+		XMFLOAT3 tangent;
+		XMFLOAT3 bitangent;
+	};
+
+	struct ConstantValueBuffer
+	{
+		XMFLOAT4 resolution;
+		float time;
+		float timeDelta;
+		INT frame;
+		INT ticks;
+		XMINT4 date;
+		XMINT4 clock;
+		XMINT4 mouse;
+		INT random;
+		INT perfHigh;
+		INT perfLow;
+	};
+
+	struct Mouse
+	{
+		int x;
+		int y;
+		int lClick;
+		int rClick;
+	};
+
+
 	// Forward declaration for internal functions
 	void LoadPipeline();
 	void LoadAssets();
@@ -101,6 +138,8 @@ private:
 	struct tm							m_tmLocalTime;
 	UINT								m_tmLastSec;
 
+	Mouse								m_mouse;
+
 	// Root assets path.
 	std::wstring m_assetsPath;
 
@@ -110,32 +149,6 @@ private:
 	// Shader File to monitor and work
 	std::wstring m_shaderFile			= L"";
 	std::string  m_shaderFileA			= "<- Click here to select HLSL file.";
-
-	// Structs
-	struct Vertex
-	{
-		XMFLOAT3 position;
-		XMFLOAT4 color;
-		XMFLOAT2 texuv0;
-		XMFLOAT2 texuv1;
-		XMFLOAT3 normal;
-		XMFLOAT3 tangent;
-		XMFLOAT3 bitangent;
-	};
-
-	struct ConstantValueBuffer
-	{
-		XMFLOAT4 resolution;
-		float time;
-		float timeDelta;
-		INT frame;
-		INT ticks;
-		XMINT4 date;
-		XMINT4 clock;
-		INT random;
-		INT perfHigh;
-		INT perfLow;
-	};
 
     // Pipeline objects.
 	static const UINT					FRAME_BUFFER = 3;

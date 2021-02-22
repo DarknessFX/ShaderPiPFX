@@ -162,7 +162,12 @@ LRESULT CALLBACK Wnd::WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 	static bool s_fullscreen = false;
 	static bool s_blockdrag = false;
 
-	static bool bIsDragWindow = false;
+	// Mouse controls and states
+	static bool bIsDragWindow = false;			// Disable drag window when deactivate or just become active.
+	static bool bIsShiftHold = false;		  	// Used to transfer MouseClicks to Shader
+	static bool bIsLeftClicked = false;  		// Save state of Mouse Left Click button
+	static bool bIsRightClicked = false;  		// Save state of Mouse Right Click button
+
 	static POINT curpos;
 	static RECT border_thickness;
 	const int bordertop_offset = 6;
@@ -296,8 +301,38 @@ LRESULT CALLBACK Wnd::WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 			break;
 
 		// FX
+		case WM_MOUSEMOVE:
+		{
+			POINT pos = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
+			if (!bIsDragWindow)
+			{
+				fxApp->OnMouseEvent(pos.x, pos.y, bIsLeftClicked, bIsRightClicked);
+				curpos = pos;
+			}
+
+			if (bIsDragWindow && s_activated)
+			{
+				int windowWidth, windowHeight;
+				RECT mainWindowRect;
+
+				GetWindowRect(hWnd, &mainWindowRect);
+				windowHeight = mainWindowRect.bottom - mainWindowRect.top;
+				windowWidth = mainWindowRect.right - mainWindowRect.left;
+
+				ClientToScreen(hWnd, &pos);
+				MoveWindow(hWnd, pos.x - curpos.x, pos.y - curpos.y, windowWidth, windowHeight, TRUE);
+			}
+			break;
+		}
+
 		case WM_LBUTTONDOWN:
 		{
+			if (bIsShiftHold)
+			{
+				bIsLeftClicked = true;
+				fxApp->OnMouseEvent(curpos.x, curpos.y, bIsLeftClicked, bIsRightClicked);
+				break;
+			}
 			if (!s_fullscreen && s_activated && !s_blockdrag) {
 				POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
 				if (DragDetect(hWnd, pt))
@@ -314,30 +349,58 @@ LRESULT CALLBACK Wnd::WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 		}
 
 		case WM_LBUTTONUP:
+			bIsLeftClicked = false;
+			fxApp->OnMouseEvent(curpos.x, curpos.y, bIsLeftClicked, bIsRightClicked);
+
 			if (bIsDragWindow) {
 				ReleaseCapture();
 				bIsDragWindow = false;
 			}
 			break;
 
-		case WM_MOUSEMOVE:
-			if (bIsDragWindow && s_activated)
+		case WM_LBUTTONDBLCLK:
+		{
+			if (bIsShiftHold)
 			{
-				int windowWidth, windowHeight;
-				RECT mainWindowRect;
-				POINT pos = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
+				fxApp->OnMouseEvent(curpos.x, curpos.y, 2, bIsRightClicked);
+				break;
+			}
 
-				GetWindowRect(hWnd, &mainWindowRect);
-				windowHeight = mainWindowRect.bottom - mainWindowRect.top;
-				windowWidth = mainWindowRect.right - mainWindowRect.left;
+			WINDOWPLACEMENT wp;
+			wp.length = sizeof(WINDOWPLACEMENT);
+			GetWindowPlacement(hWnd, &wp);
+			if (wp.showCmd != SW_MAXIMIZE) {
+				wp.showCmd = SW_MAXIMIZE;
+				SetWindowPlacement(hWnd, &wp);
+			}
+			else
+			{
+				wp.showCmd = SW_SHOWNORMAL;
+				SetWindowPlacement(hWnd, &wp);
+			}
+			s_fullscreen = !s_fullscreen;
+			break;
+		}
 
-				ClientToScreen(hWnd, &pos);
-				MoveWindow(hWnd, pos.x - curpos.x, pos.y - curpos.y, windowWidth, windowHeight, TRUE);
+		case WM_RBUTTONDOWN:
+		{
+			if (bIsShiftHold)
+			{
+				bIsRightClicked = true;
+				fxApp->OnMouseEvent(curpos.x, curpos.y, bIsLeftClicked, bIsRightClicked);
 			}
 			break;
+		}
 
 		case WM_RBUTTONUP:
 		{
+			bIsRightClicked = false;
+			fxApp->OnMouseEvent(curpos.x, curpos.y, bIsLeftClicked, bIsRightClicked);
+			if (bIsShiftHold)
+			{
+				break;
+			}
+
 			long dwExStyle = GetWindowLong(hWnd, GWL_EXSTYLE);
 			if ((dwExStyle & WS_EX_TOPMOST))
 			{
@@ -366,22 +429,13 @@ LRESULT CALLBACK Wnd::WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 			break;
 		}
 
-		case WM_LBUTTONDBLCLK:
+		case WM_RBUTTONDBLCLK:
 		{
-			WINDOWPLACEMENT wp;
-			wp.length = sizeof(WINDOWPLACEMENT);
-			GetWindowPlacement(hWnd, &wp);
-			if (wp.showCmd != SW_MAXIMIZE) {
-				wp.showCmd = SW_MAXIMIZE;
-				SetWindowPlacement(hWnd, &wp);
-			}
-			else
+			if (bIsShiftHold)
 			{
-				wp.showCmd = SW_SHOWNORMAL;
-				SetWindowPlacement(hWnd, &wp);
+				fxApp->OnMouseEvent(curpos.x, curpos.y, bIsLeftClicked, 2);
+				break;
 			}
-			s_fullscreen = !s_fullscreen;
-			break;
 		}
 
 		case WM_SYSCOMMAND:
@@ -433,6 +487,13 @@ LRESULT CALLBACK Wnd::WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 						bIsWndKey = true;
 						break;
 					}
+
+				case VK_SHIFT:
+					if (!bIsDragWindow) 
+					{
+						bIsShiftHold = true;
+						break;
+					}
 			}
 			if (fxApp && !bIsWndKey)
 			{
@@ -441,14 +502,22 @@ LRESULT CALLBACK Wnd::WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
 			}
 			break;
 		}
+
 		case WM_KEYUP:
+		case WM_SYSKEYUP:
+		{
+			switch (wParam) {
+				case VK_SHIFT:
+					bIsShiftHold = false;
+					break;
+			}
 			if (fxApp)
 			{
 				fxApp->OnKeyUp(static_cast<UINT8>(wParam));
 				return 0;
 			}
 			break;
-
+		}
 		case WM_DROPFILES:
 			Wnd::OnDropFile(wParam);
 			break;
