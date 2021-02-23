@@ -1,5 +1,4 @@
-static const float PI = 3.14159265f;
-
+// === VS+PS HLSL Init ========================================================
 cbuffer Global : register(b0)
 {
     float4 resolution;              // Width, Height, DPI, AspectRatio
@@ -9,10 +8,11 @@ cbuffer Global : register(b0)
     int ticks;
     int4 date;                      // as Year, Month, Day of month, Day since Jan.1st
     int4 clock;                     // as Hour, Minutes, Seconds, isDaylight Savings.
+    int4 mouse;                     // z=LeftClick, w=RightClick. 1 Click, 2 DoubleClick
     int random;                     // from CPU rand() * RAND_MAX
-
-    int perfHigh;                   // from QueryPerformanceCounter high-resolution time stamp
-    int perfLow;                    // int64 split in 2x int32 High Low.
+    
+    int perfHigh;                   // from QueryPerformanceCounter high-resolution 
+    int perfLow;                    // time stamp int64 split in 2x int32 High Low.
 };
 
 struct VSInput
@@ -51,27 +51,17 @@ PSInput VSMain(VSInput input)
     result.bitangent = input.bitangent;
     //result.frontface = input.frontface;
     //result.depth = input.depth;
-
     return result;
 }
 
-// ============================================================================
+// Helpers: PI, glsl mod, uvs.
+static const float PI = 3.1415926535897932384626433832795028;
+float mod(float p) { if (sign(p.x)!=-1. ) { return fmod(p.x,1.); } else { return -fmod(p.x,1.); } }
+float2 mod2(float2 p) { return float2(mod(p.x), mod(p.y)); }
+float2 uv_glsl(float2 pos) { return float2(pos.x / resolution.x, 1 - ( pos.y / resolution.y )); }
+float2 uv_center(float2 pos) { return float2(pos.y / resolution.y - 0.5, (pos.y / resolution.y - 0.5) * resolution.w); }
 
-float2 uv_glsl(float2 pos) 
-{
-  float2 uv;
-  uv.x = pos.x / resolution.x;
-  uv.y = 1 - ( pos.y / resolution.y );
-  return uv;
-}
-
-float2 uv_center(float2 pos)
-{
-    // UV Center with AspectRatio correction
-    float2 uv = pos.xy / resolution.xy - 0.5;
-    uv.x *= resolution.w;
-    return uv;
-}
+// === Pixel Shader code goes in PSMain =======================================
 
 float4 PSMain(PSInput input) : SV_TARGET
 {
@@ -81,9 +71,9 @@ float4 PSMain(PSInput input) : SV_TARGET
     float2 uvcenter = uv_center(input.position.xy);         // TopLeft  -0.5,-0.5  BottomRight  0.5,0.5
 
     float2 uv = uvcenter;
-    float2 pos = input.position.xy;                   // fragCoord
-    float4 color;                                     // fragColor
-    
+    float2 pos = input.position.xy;                         // fragCoord
+    float4 color;                                           // fragColor
+
     {
         // Credits ShaderToy.com - New Shader
         // Time varying pixel color
