@@ -584,8 +584,18 @@ void FXApp::LoadShaders()
 	if (bIsShaderFile)
 	{
 		pUtils->LoadFile(m_shaderFile.c_str(), nullptr, &pSource);
-		CompileShader(pSource, PixelShader);
-		CompileShader(pSource, VertexShader);
+		if (pSource)
+		{
+			CompileShader(pSource, PixelShader);
+			CompileShader(pSource, VertexShader);
+		}
+		else
+		{
+			bIsShaderError = true;
+			std::wstring wsErrorsMsg = L"Internal error: Try to save your hlsl again.\n(TODO: Better internal control when saving to fast and it trigger before last compile finishes.)\n";
+			std::string converted_str(wsErrorsMsg.begin(), wsErrorsMsg.end());
+			m_ShaderErrorMsg = converted_str.c_str();
+		}
 	}
 	else
 	{

@@ -102,7 +102,7 @@ bool Wnd::FXCreateWindow(FXApp* pfxApp, HINSTANCE hInstance, int nCmdShow)
 
 	WNDCLASSEX wc = {
 		sizeof(WNDCLASSEX),
-		CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS,
+		CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS | CS_OWNDC,
 		WindowProc,
 		0L,
 		0L,
