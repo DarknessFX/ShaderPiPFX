@@ -16,7 +16,7 @@
 
 HLSL live player. Compile and play your HLSL shader automatically.<br/>
 
-Project info/blog at https://dfx.lv/ShaderPiPFX (soon) .<br/><br/>
+Project info/blog at https://dfx.lv/ShaderPiPFX .<br/><br/>
 
 <img src="https://raw.githubusercontent.com/DarknessFX/ShaderPiPFX/main/.git_img/Sample01.png" width="640px" />
 
